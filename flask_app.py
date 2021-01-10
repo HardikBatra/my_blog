@@ -8,6 +8,12 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = params['uri']
 db = SQLAlchemy(app)
 
+class Posts(db.Model):
+    sno = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(80),  nullable=False)
+    slug = db.Column(db.String(120), nullable=False)
+    date = db.Column(db.String(120),  nullable=False)
+    content = db.Column(db.String(120),  nullable=False)
 class Contacts(db.Model):
     sno = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80),  nullable=False)
@@ -16,10 +22,11 @@ class Contacts(db.Model):
     msg = db.Column(db.String(120),  nullable=False)
 @app.route('/')
 def index():
-    return render_template('index.html')
+    posts=Posts.query.filter_by().all()
+    return render_template('index.html',params=params,posts=posts)
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    return render_template('about.html',params=params)
 @app.route('/contact', methods=['POST', 'GET'])
 def contact():
     if request.method == 'POST':
@@ -33,10 +40,12 @@ def contact():
     
     
     
-    return render_template('contact.html')
-@app.route('/post')
-def post():
-    return render_template('post.html')
+    return render_template('contact.html',params=params)
 
 
+@app.route("/post/<string:post_slug>",methods=['GET'])
+def post_route(post_slug):
+    post=Posts.query.filter_by(slug=post_slug).first()
+
+    return render_template('post.html',params=params,post=post)
 app.run(debug=True)
