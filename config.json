@@ -1,0 +1,8 @@
+{
+    "params":{
+
+              "uri":"mysql://root:@localhost/my_blog"
+            }
+
+    
+}

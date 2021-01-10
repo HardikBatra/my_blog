@@ -1,7 +1,11 @@
 from flask import Flask,render_template,request
 from flask_sqlalchemy import SQLAlchemy
+import json
+with open ('config.json','r') as r:
+    params=json.load(r)["params"]
+
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost/my_blog'
+app.config['SQLALCHEMY_DATABASE_URI'] = params['uri']
 db = SQLAlchemy(app)
 
 class Contacts(db.Model):
